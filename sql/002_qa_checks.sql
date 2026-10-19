@@ -1,0 +1,24 @@
+SELECT
+  COUNT(*) AS total_rows,
+  COUNT(DISTINCT CUSTOMER_ID) AS distinct_customers,
+  COUNTIF(CUSTOMER_ID IS NULL) AS null_customer_ids,
+  COUNTIF(SEGMENT IS NULL) AS null_segments,
+  COUNTIF(CLASSIFICATION_TYPE = 'MODEL' AND CLUSTER_ID IS NULL) AS model_rows_without_cluster,
+  COUNTIF(CLASSIFICATION_TYPE = 'MODEL') AS model_candidates,
+  MIN(REFERENCE_DATE) AS min_reference_date,
+  MAX(REFERENCE_DATE) AS max_reference_date,
+  COUNT(DISTINCT MODEL_VERSION) AS model_versions
+FROM `${PROJECT_ID}.${RFV_DATASET}.rfv_base_final`;
+
+SELECT
+  SEGMENT,
+  CLASSIFICATION_TYPE,
+  COUNT(*) AS qty
+FROM `${PROJECT_ID}.${RFV_DATASET}.rfv_base_final`
+GROUP BY SEGMENT, CLASSIFICATION_TYPE
+ORDER BY qty DESC;
+
+SELECT *
+FROM `${PROJECT_ID}.${RFV_DATASET}.rfv_execution_log`
+ORDER BY STARTED_AT DESC
+LIMIT 10;
